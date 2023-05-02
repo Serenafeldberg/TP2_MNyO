@@ -7,7 +7,7 @@ def update(num, x, y, line):
     line.set_data([0, x[num]], [0, y[num]])
     return line,
 
-def show_animation(L, t, x, y):
+def show_animation(L, t, x, y, title):
     fig, ax = plt.subplots()
     line, = ax.plot([], [], 'o-', lw=2)
     ax.set_xlim(-L, L)
@@ -17,7 +17,7 @@ def show_animation(L, t, x, y):
     
     ani = animation.FuncAnimation(fig, update, len(t), fargs=[x, y, line], interval=10, blit=True)
     #show animation
-    plt.title("Motion of simple pendulum")
+    plt.title(title)
     plt.xlabel("Horizontal position (m)")
     plt.ylabel("Vertical position (m)")
     plt.show()
@@ -69,7 +69,7 @@ def euler_explicito (y0, x0, t0, step, N_iter, f, gravity, length): #f = z' = th
     plt.ylabel("Vertical position (m)")
     plt.show()
     
-    show_animation(length, t, _x, _y)
+    show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
     
 # RUNGE KUTTA 4
 g = 9.81 #gravitational acceleration (m/s^2)
@@ -139,6 +139,8 @@ def rungeKutta4_method():
     print(potential_energy)
     """
     #return t, theta, _x, _y
+    
+    show_animation(L, t, _x, _y, "Motion of simple pendulum - RK4")
 
 
 if __name__ == '__main__':
