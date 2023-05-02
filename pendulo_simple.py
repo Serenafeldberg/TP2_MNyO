@@ -70,8 +70,79 @@ def euler_explicito (y0, x0, t0, step, N_iter, f, gravity, length): #f = z' = th
     plt.show()
     
     show_animation(length, t, _x, _y)
+    
+# RUNGE KUTTA 4
+g = 9.81 #gravitational acceleration (m/s^2)
+L = 9.8 #length of the pendulum (m)
+theta0 = 0.05  #initial angle (radians)
+omega0 = 0.0  #initial angular velocity (radians)
+m = 1 #mass of the pendulum
+
+def f(ti, yi):
+    theta, omega = yi
+    theta_dt = omega
+    omega_dt = -(g/L)*np.sin(theta)
+    return np.array([theta_dt, omega_dt])
+
+def rungeKutta4_method():
+    y0 = np.array([theta0, omega0])
+    h = 0.1
+    t0, tn = 0.0, 40.0
+    
+    t = np.arange(t0, tn+h, h)
+    y = np.zeros((len(t), 2)) # vamos a tener un arreglo de len(t) arreglos de dos elementos
+    y[0] = y0
+    
+    for i in range(len(t)-1):
+        k1 = h*f(t[i], y[i])
+        k2 = h*f(t[i] + 0.5*h, y[i] + 0.5*k1)
+        k3 = h*f(t[i] + 0.5*h, y[i] + 0.5*k2)
+        k4 = h*f(t[i] + h, y[i] + k3)
+        
+        y[i+1] = y[i] + (1/6)*(k1 + 2*k2 + 2*k3 + k4)
+    
+    #plot solution
+    theta = y[:,0] 
+    _x = L*np.sin(theta)
+    _y = -L*np.cos(theta)
+    
+    
+    plt.plot(_x, _y)
+    plt.title("Trayectory of simple pendulum with RK4")
+    plt.xlabel("Horizontal position (m)")
+    plt.ylabel("Vertical position (m)")
+    plt.show()
+    
+    plt.plot(t, theta, 'b')
+    plt.xlabel('Time (s)')
+    plt.ylabel('Angle (radians)')
+    plt.title('Pendulum motion using Runge Kutta 4 method')
+    plt.show()
+    
+    
+    omega = np.zeros(len(t))
+    for i in range(len(t)):
+        omega[i] = y[i,1]
+    
+    
+    kinetic_energy = 0.5*m*(L*L)*(omega*omega)
+    potential_energy = -m*g*L*np.cos(theta) + m*g*L
+    total_energy = kinetic_energy + potential_energy
+    """
+    print("Total energy:\n")
+    print(total_energy)
+    
+    print("Kinetic energy:\n")
+    print(kinetic_energy)
+    
+    print("Potential energy:\n")
+    print(potential_energy)
+    """
+    #return t, theta, _x, _y
 
 
 if __name__ == '__main__':
     euler_explicito(math.pi/3, 0, 0, 0.01, 1000, z_prime, 9.81, 1)
+    rungeKutta4_method()
+
     
