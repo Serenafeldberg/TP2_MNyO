@@ -1,6 +1,26 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+
+def update(num, x, y, line):
+    line.set_data([0, x[num]], [0, y[num]])
+    return line,
+
+def show_animation(L, t, x, y):
+    fig, ax = plt.subplots()
+    line, = ax.plot([], [], 'o-', lw=2)
+    ax.set_xlim(-L, L)
+    ax.set_ylim(-1.1*L, 1.1*L)
+    ax.set_aspect('equal')
+    ax.grid()
+    
+    ani = animation.FuncAnimation(fig, update, len(t), fargs=[x, y, line], interval=10, blit=True)
+    #show animation
+    plt.title("Motion of simple pendulum")
+    plt.xlabel("Horizontal position (m)")
+    plt.ylabel("Vertical position (m)")
+    plt.show()
 
 def E (mass, length, gravity, theta):
     return T(mass, length, theta) + V(mass, gravity, length, theta)
@@ -40,6 +60,16 @@ def euler_explicito (y0, x0, t0, step, N_iter, f, gravity, length): #f = z' = th
     plt.xlabel('t')
     plt.ylabel('theta')
     plt.show()
+    
+    _x = length*np.sin(positions)
+    _y = -length*np.cos(positions)
+    plt.plot(_x, _y)
+    plt.title("Trayectory of simple pendulum with Euler")
+    plt.xlabel("Horizontal position (m)")
+    plt.ylabel("Vertical position (m)")
+    plt.show()
+    
+    show_animation(length, t, _x, _y)
 
 
 if __name__ == '__main__':
