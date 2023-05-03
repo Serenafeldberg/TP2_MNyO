@@ -22,14 +22,14 @@ def show_animation(L, t, x, y, title):
     plt.ylabel("Vertical position (m)")
     plt.show()
 
-def E (mass, length, gravity, theta):
-    return T(mass, length, theta) + V(mass, gravity, length, theta)
+def E (mass, length, gravity, theta, omega):
+    return T(mass, length, omega) + V(mass, gravity, length, theta)
 
 def T (mass, length, theta):
-    return (1/2)*mass*(math.pow(length,2))*(math.pow(theta, 2))
+    return (1/2)*mass*(length**2)*(theta**2)
 
 def V (mass, gravity, length, theta):
-    return mass*gravity*length - (mass*gravity*length)*(math.cos(theta))
+    return mass*gravity*length - (mass*gravity*length)*(np.cos(theta))
 
 def r (length, x):
     return np.array([length*math.sin(x), -length*math.cos(x)])
@@ -41,7 +41,7 @@ def z (theta_prime):
 def z_prime (x, w0):
     return -(w0**2)*math.sin(x)
 
-def euler_explicito (y0, x0, t0, tn, step, f, gravity, length, mass): #f = z' = theta''
+def euler_semi_implicito (y0, x0, t0, tn, step, f, gravity, length, mass): #f = z' = theta''
     w0 = math.sqrt(gravity/length)
     t_start = t0
     t_end = tn
@@ -67,6 +67,11 @@ def euler_explicito (y0, x0, t0, tn, step, f, gravity, length, mass): #f = z' = 
     plt.xlabel("Horizontal position (m)")
     plt.ylabel("Vertical position (m)")
     plt.show()
+
+    plt.plot(t, E(mass, length, gravity, positions, velocity))
+    plt.plot(t, T(mass, length, velocity))
+    plt.plot(t, V(mass, gravity, length, positions))
+    plt.show()
     
     show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
 
@@ -76,7 +81,7 @@ def f(ti, yi):
     length = 1
     theta, omega = yi
     theta_dt = omega
-    omega_dt = -(gravity/length)*np.sin(theta)
+    omega_dt = z_prime(theta, math.sqrt(gravity/length))
     return np.array([theta_dt, omega_dt])
 
 def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
@@ -98,8 +103,7 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     theta = y[:,0] 
     _x = length*np.sin(theta)
     _y = -length*np.cos(theta)
-    
-    
+
     plt.plot(_x, _y)
     plt.title("Trayectory of simple pendulum with RK4")
     plt.xlabel("Horizontal position (m)")
@@ -117,6 +121,10 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     for i in range(len(t)):
         omega[i] = y[i,1]
     
+    plt.plot(t, E(mass, length, gravity, theta, omega), label = "Total energy")
+    plt.plot(t, T(mass, length, omega))
+    plt.plot(t, V(mass, gravity, length, theta))
+    plt.show()
     
     kinetic_energy = 0.5*mass*(length**2)*(omega*omega)
     potential_energy = -mass*gravity*length*np.cos(theta) + mass*gravity*length
@@ -137,7 +145,7 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
 
 
 if __name__ == '__main__':
-    euler_explicito(math.pi/3, 0, 0, 10, 0.01, z_prime, 9.81, 1, 1)
+    euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, z_prime, 9.81, 1, 1)
     rungeKutta4_method(9.81, 1, math.pi/3, 0, 1, 0, 10, 0.01)
 
     
