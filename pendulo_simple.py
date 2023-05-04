@@ -81,7 +81,8 @@ m = 1 #mass of the pendulum
 def f(ti, yi):
     theta, omega = yi
     theta_dt = omega
-    omega_dt = -(g/L)*np.sin(theta)
+    #omega_dt = -(g/L)*np.sin(theta)
+    omega_dt = z_prime(theta, math.sqrt(g/L))
     return np.array([theta_dt, omega_dt])
 
 def rungeKutta4_method():
