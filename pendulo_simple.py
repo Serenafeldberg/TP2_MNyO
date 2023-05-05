@@ -26,7 +26,7 @@ def E (mass, length, gravity, theta):
     return T(mass, length, theta) + V(mass, gravity, length, theta)
 
 def T (mass, length, theta):
-    return (1/2)*mass*(math.pow(length,2))*(math.pow(theta, 2))
+    return (1/2)*mass*(math.pow(length,2))*(theta*theta)
 
 def V (mass, gravity, length, theta):
     return mass*gravity*length - (mass*gravity*length)*(math.cos(theta))
@@ -69,26 +69,28 @@ def euler_explicito (y0, x0, t0, step, N_iter, f, gravity, length): #f = z' = th
     plt.ylabel("Vertical position (m)")
     plt.show()
     
-    show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
+    #show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
+    return positions
     
 # RUNGE KUTTA 4
 g = 9.81 #gravitational acceleration (m/s^2)
 L = 9.8 #length of the pendulum (m)
-theta0 = 0.05  #initial angle (radians)
+theta0 = math.pi/3  #initial angle (radians)
 omega0 = 0.0  #initial angular velocity (radians)
-m = 1 #mass of the pendulum
+m = 1.0 #mass of the pendulum
+t0, tn = 0.0, 40.0
+h = 0.01
 
 def f(ti, yi):
     theta, omega = yi
     theta_dt = omega
     #omega_dt = -(g/L)*np.sin(theta)
-    omega_dt = z_prime(theta, math.sqrt(g/L))
+    #omega_dt = z_prime(theta, math.sqrt(g/L))
+    omega_dt = -(g/L)*np.sin(theta) 
     return np.array([theta_dt, omega_dt])
 
 def rungeKutta4_method():
     y0 = np.array([theta0, omega0])
-    h = 0.1
-    t0, tn = 0.0, 40.0
     
     t = np.arange(t0, tn+h, h)
     y = np.zeros((len(t), 2)) # vamos a tener un arreglo de len(t) arreglos de dos elementos
@@ -126,9 +128,9 @@ def rungeKutta4_method():
         omega[i] = y[i,1]
     
     
-    kinetic_energy = 0.5*m*(L*L)*(omega*omega)
-    potential_energy = -m*g*L*np.cos(theta) + m*g*L
-    total_energy = kinetic_energy + potential_energy
+    #kinetic_energy = 0.5*m*(L*L)*(omega*omega)
+    #potential_energy = -m*g*L*np.cos(theta) + m*g*L
+    #total_energy = kinetic_energy + potential_energy
     """
     print("Total energy:\n")
     print(total_energy)
@@ -141,11 +143,14 @@ def rungeKutta4_method():
     """
     #return t, theta, _x, _y
     
-    show_animation(L, t, _x, _y, "Motion of simple pendulum - RK4")
+    #show_animation(L, t, _x, _y, "Motion of simple pendulum - RK4")
+    
+    return theta
 
 
 if __name__ == '__main__':
-    euler_explicito(math.pi/3, 0, 0, 0.01, 1000, z_prime, 9.81, 1)
-    rungeKutta4_method()
+    theta_euler = euler_explicito(math.pi/3, 0, 0, 0.01, 1000, z_prime, 9.81, 1)
+    theta_RK = rungeKutta4_method()
+    
 
     
