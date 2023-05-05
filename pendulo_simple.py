@@ -25,8 +25,8 @@ def show_animation(L, t, x, y, title):
 def E (mass, length, gravity, theta, omega):
     return T(mass, length, omega) + V(mass, gravity, length, theta)
 
-def T (mass, length, theta):
-    return (1/2)*mass*(length**2)*(theta**2)
+def T (mass, length, omega):
+    return (1/2)*mass*(length**2)*(omega**2)
 
 def V (mass, gravity, length, theta):
     return mass*gravity*length - (mass*gravity*length)*(np.cos(theta))
@@ -41,10 +41,12 @@ def z (theta_prime):
 def z_prime (x, w0):
     return -(w0**2)*math.sin(x)
 
-def plotEnergy (t, mass, length, gravity, theta, omega):
+def plotEnergy (t, mass, length, gravity, theta, omega, title):
     plt.plot(t, E(mass, length, gravity, theta, omega), label = "Total energy")
-    plt.plot(t, T(mass, length, omega))
-    plt.plot(t, V(mass, gravity, length, theta))
+    plt.plot(t, T(mass, length, omega), label = "Kinetic energy")
+    plt.plot(t, V(mass, gravity, length, theta), label="potential energy")
+    plt.title(title)
+    plt.legend()
     plt.show()
 
 def plotTrayectory (x, y, title):
@@ -77,7 +79,7 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' 
     _y = -length*np.cos(positions)
     plotTrayectory(_x, _y, "Trayectory of simple pendulum - Euler")
 
-    plotEnergy(t, mass, length, gravity, positions, velocity)
+    plotEnergy(t, mass, length, gravity, positions, velocity, "energy in Euler")
     
 
     #show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
@@ -90,12 +92,10 @@ theta0 = math.pi/3  #initial angle (radians)
 omega0 = 0.0  #initial angular velocity (radians)
 m = 1.0 #mass of the pendulum
 t0, tn = 0.0, 40.0
-h = 0.01
+h = 0.1
 
 
 def f(ti, yi):
-    gravity = 9.81
-    length = 1
     theta, omega = yi
     theta_dt = omega
     #omega_dt = -(g/L)*np.sin(theta)
@@ -106,7 +106,7 @@ def f(ti, yi):
 def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     y0 = np.array([theta0, omega0])
     
-    t = np.arange(t0, tn, h)
+    t = np.arange(t0, tn+h, h)
     y = np.zeros((len(t), 2)) # vamos a tener un arreglo de len(t) arreglos de dos elementos
     y[0] = y0
     
@@ -120,23 +120,24 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     
     #plot solution
     theta = y[:,0] 
-    _x = length*np.sin(theta)
-    _y = -length*np.cos(theta)
+    _x = L*np.sin(theta)
+    _y = -L*np.cos(theta)
 
-    plotTrayectory(_x, _y, "Trayectory of simple pendulum - Runge Kutta 4")
+    #plotTrayectory(_x, _y, "Trayectory of simple pendulum - Runge Kutta 4")
     
+    """
     plt.plot(t, theta, 'b')
     plt.xlabel('Time (s)')
     plt.ylabel('Angle (radians)')
     plt.title('Pendulum motion using Runge Kutta 4 method')
     plt.show()
-    
+    """
     
     omega = np.zeros(len(t))
     for i in range(len(t)):
         omega[i] = y[i,1]
     
-    plotEnergy(t, mass, length, gravity, theta, omega)
+    plotEnergy(t, m, L, g, theta, omega, "energy in RK4")
     
     #kinetic_energy = 0.5*m*(L*L)*(omega*omega)
     #potential_energy = -m*g*L*np.cos(theta) + m*g*L
