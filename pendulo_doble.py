@@ -5,7 +5,7 @@ from scipy.interpolate import interp1d
 from matplotlib.animation import FuncAnimation
 
 # Constants
-m1, m2 = 3, 1 #mass of the pendulums
+m1, m2 = 6.4, 6.4 #mass of the pendulums
 l1, l2 = 1, 1 #length of pendulums in metres
 g = 9.81 #acceleration due to gravity in m/s^2
 
@@ -34,6 +34,8 @@ def double_pendulum(t, y):
     
     
     return dtheta1_dt, dtheta2_dt, domega1_dt, domega2_dt
+
+
 
 # Solving the system using Runge Kutta method
 sol = solve_ivp(double_pendulum, [t[0], t[-1]], [theta1_0, theta2_0, omega1_0, omega2_0], method='RK45',t_eval=t)

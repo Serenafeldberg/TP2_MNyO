@@ -154,14 +154,16 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     """
     #return t, theta, _x, _y
     
-    #show_animation(L, t, _x, _y, "Motion of simple pendulum - RK4")
+    show_animation(L, t, _x, _y, "Motion of simple pendulum - RK4")
     
     return theta
 
+def estabilidad_euler ():
+    return
 
 if __name__ == '__main__':
     euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
-    rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01)
+    rungeKutta4_method(9.81, 1, math.pi/6, 0, 10, 0, 100, 0.01)
 
 
     
