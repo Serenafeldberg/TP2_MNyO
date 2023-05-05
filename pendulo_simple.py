@@ -2,6 +2,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import sympy as sp
 
 def update(num, x, y, line):
     line.set_data([0, x[num]], [0, y[num]])
@@ -85,6 +86,7 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' 
     #show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
     return positions
     
+'''
 # RUNGE KUTTA 4
 g = 9.81 #gravitational acceleration (m/s^2)
 L = 9.8 #length of the pendulum (m)
@@ -93,14 +95,15 @@ omega0 = 0.0  #initial angular velocity (radians)
 m = 1.0 #mass of the pendulum
 t0, tn = 0.0, 40.0
 h = 0.1
+'''
 
 
-def f(ti, yi):
+def f(ti, yi, gravity, length):
     theta, omega = yi
     theta_dt = omega
     #omega_dt = -(g/L)*np.sin(theta)
     #omega_dt = z_prime(theta, math.sqrt(g/L))
-    omega_dt = -(g/L)*np.sin(theta) 
+    omega_dt = -(gravity/length)*np.sin(theta) 
     return np.array([theta_dt, omega_dt])
 
 def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
@@ -111,17 +114,17 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     y[0] = y0
     
     for i in range(len(t)-1):
-        k1 = h*f(t[i], y[i])
-        k2 = h*f(t[i] + 0.5*h, y[i] + 0.5*k1)
-        k3 = h*f(t[i] + 0.5*h, y[i] + 0.5*k2)
-        k4 = h*f(t[i] + h, y[i] + k3)
+        k1 = h*f(t[i], y[i], gravity, length)
+        k2 = h*f(t[i] + 0.5*h, y[i] + 0.5*k1, gravity, length)
+        k3 = h*f(t[i] + 0.5*h, y[i] + 0.5*k2, gravity, length)
+        k4 = h*f(t[i] + h, y[i] + k3, gravity, length)
         
         y[i+1] = y[i] + (1/6)*(k1 + 2*k2 + 2*k3 + k4)
     
     #plot solution
     theta = y[:,0] 
-    _x = L*np.sin(theta)
-    _y = -L*np.cos(theta)
+    _x = length*np.sin(theta)
+    _y = -length*np.cos(theta)
 
     #plotTrayectory(_x, _y, "Trayectory of simple pendulum - Runge Kutta 4")
     
@@ -137,7 +140,7 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     for i in range(len(t)):
         omega[i] = y[i,1]
     
-    plotEnergy(t, m, L, g, theta, omega, "energy in RK4")
+    plotEnergy(t, mass, length, gravity, theta, omega, "energy in RK4")
     
     #kinetic_energy = 0.5*m*(L*L)*(omega*omega)
     #potential_energy = -m*g*L*np.cos(theta) + m*g*L
@@ -154,16 +157,70 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     """
     #return t, theta, _x, _y
     
-    show_animation(L, t, _x, _y, "Motion of simple pendulum - RK4")
+    show_animation(length, t, _x, _y, "Motion of simple pendulum - RK4")
     
     return theta
 
-def estabilidad_euler ():
-    return
+def jacobiana (theta, omega, gravity, length):
+
+    # Definimos las variables simbólicas
+    x1, x2 = sp.symbols('x1 x2')
+
+    # Definimos las funciones simbólicas
+    f1 = x2                              # z = theta'
+    f2 = -(gravity/length)*sp.sin(x1)    # z' = theta''
+
+    # Calculamos las derivadas parciales
+    df1_dx1 = sp.diff(f1, x1)
+    df1_dx2 = sp.diff(f1, x2)
+    df2_dx1 = sp.diff(f2, x1)
+    df2_dx2 = sp.diff(f2, x2)
+
+    # Construimos la matriz Jacobiana general
+    J = sp.Matrix([[df1_dx1, df1_dx2], [df2_dx1, df2_dx2]])
+    print('Matriz Jacobiana:')
+    print(J)
+
+    # Definimos el punto en el que queremos evaluar la matriz Jacobiana
+    x1_0 = omega
+    x2_0 = theta
+
+    # Sustituimos los valores del punto en las derivadas parciales
+    df1_dx1_val = df1_dx1.subs([(x1, x1_0), (x2, x2_0)])
+    df1_dx2_val = df1_dx2.subs([(x1, x1_0), (x2, x2_0)])
+    df2_dx1_val = df2_dx1.subs([(x1, x1_0), (x2, x2_0)])
+    df2_dx2_val = df2_dx2.subs([(x1, x1_0), (x2, x2_0)])
+
+    # Construimos la matriz Jacobiana
+    J = np.array([[df1_dx1_val, df1_dx2_val], [df2_dx1_val, df2_dx2_val]])
+
+    # Mostramos la matriz Jacobiana
+    print('Matriz Jacobiana:')
+    print(J)
+
+    return J
+
+def estabilidad (J, theta, omega):
+    # Calculamos los autovalores de la matriz Jacobiana
+    eigenvalues = np.linalg.eigvals(J)
+
+    # Mostramos los autovalores
+    print('Autovalores:')
+    print(eigenvalues)
+
+    # Determinamos la estabilidad del punto de equilibrio
+    if np.all(np.real(eigenvalues) < 0):
+        print('El punto de equilibrio es estable.')
+    elif np.all(np.real(eigenvalues) > 0):
+        print('El punto de equilibrio es inestable.')
+    else:
+        print('Se necesitan técnicas adicionales para determinar la estabilidad del punto de equilibrio.')
 
 if __name__ == '__main__':
-    euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
-    rungeKutta4_method(9.81, 1, math.pi/6, 0, 10, 0, 100, 0.01)
-
-
+    #euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
+    #rungeKutta4_method(9.81, 9.8, math.pi/6, 0, 10, 0, 100, 0.01)
+    print("PRIMER PUNTO")
+    j1 = jacobiana(0, (3/2)*math.pi, 9.81, 9.8) # punto de equilibrio (0,0)
+    print("SEGUNDO PUNTO")
+    j2 = jacobiana(0, math.pi, 9.81, 9.8) # punto de equilibrio (0, pi)
     
