@@ -46,6 +46,8 @@ def plotEnergy (t, mass, length, gravity, theta, omega, title):
     plt.plot(t, E(mass, length, gravity, theta, omega), label = "Total energy")
     plt.plot(t, T(mass, length, omega), label = "Kinetic energy")
     plt.plot(t, V(mass, gravity, length, theta), label="potential energy")
+    plt.xlabel("Time (s)")
+    plt.ylabel("Energy")
     plt.title(title)
     plt.legend()
     plt.show()
@@ -114,7 +116,7 @@ def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
     
     plotTrayectory(_x, _y, 'Trayectory of pendulum - Explicit Euler method')
     plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
-    plotAngles(t, theta, 'Pendulum motion using Euler method')
+    plotAngles(t, theta, 'Pendulum motion - Explicit Euler method')
     
     
 '''
