@@ -2,7 +2,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import sympy as sp
+#import sympy as sp
 
 def update(num, x, y, line):
     line.set_data([0, x[num]], [0, y[num]])
@@ -57,6 +57,13 @@ def plotTrayectory (x, y, title):
     plt.ylabel("Vertical position (m)")
     plt.show()
 
+def plotAngles(t, theta, title):
+    plt.plot(t, theta)
+    plt.title(title)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Angle (rad)")
+    plt.show()
+
 def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' = theta''
     w0 = math.sqrt(gravity/length)
     t_start = t0
@@ -85,6 +92,30 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' 
 
     #show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
     return positions
+
+def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
+    y0 = np.array([theta0, omega0])
+    t = np.arange(t0, tn+h, h)
+    y = np.zeros((len(t), 2)) # vamos a tener un arreglo de len(t) arreglos de dos elementos
+    y[0] = y0
+
+    for i in range(len(t)-1):  
+        y[i+1] = y[i] + h*f(t[i], y[i], gravity, length)
+
+    #plot solution
+
+    theta = y[:,0] 
+    _x = length*np.sin(theta)
+    _y = -1*length*np.cos(theta)
+    
+    omega = np.zeros(len(t))
+    for i in range(len(t)):
+        omega[i] = y[i,1]
+    
+    plotTrayectory(_x, _y, 'Trayectory of pendulum - Explicit Euler method')
+    plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
+    plotAngles(t, theta, 'Pendulum motion using Euler method')
+    
     
 '''
 # RUNGE KUTTA 4
@@ -219,8 +250,11 @@ def estabilidad (J, theta, omega):
 if __name__ == '__main__':
     #euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
     #rungeKutta4_method(9.81, 9.8, math.pi/6, 0, 10, 0, 100, 0.01)
+    euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
+    
+    """
     print("PRIMER PUNTO")
     j1 = jacobiana(0, (3/2)*math.pi, 9.81, 9.8) # punto de equilibrio (0,0)
     print("SEGUNDO PUNTO")
     j2 = jacobiana(0, math.pi, 9.81, 9.8) # punto de equilibrio (0, pi)
-    
+    """
