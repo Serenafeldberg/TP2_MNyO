@@ -111,7 +111,8 @@ def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
     #plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
     #plotAngles(t, theta, 'Pendulum motion - Explicit Euler method')
     
-    show_animation(length, t, _x, _y, "Motion of simple pendulum - Explicit Euler method")
+    #show_animation(length, t, _x, _y, "Motion of simple pendulum - Explicit Euler method")
+    
     return t, theta, _x, _y, omega
     
 
