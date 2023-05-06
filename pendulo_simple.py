@@ -70,7 +70,7 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' 
     w0 = math.sqrt(gravity/length)
     t_start = t0
     t_end = tn
-    t = np.arange(t_start, t_end, step)
+    t = np.arange(t_start, t_end+step, step)
     positions = np.zeros(len(t)) #z'
     velocity = np.zeros(len(t)) #z
     positions[0] = y0 
@@ -79,21 +79,17 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' 
     for i in range(1, len(t)):
         velocity[i] = velocity[i-1] + step*z_prime(positions[i-1], w0)
         positions[i] = positions[i-1] + step*z(velocity[i])
-
-    plt.plot (t, positions, 'b', label='trayectoria')
-    plt.xlabel('t')
-    plt.ylabel('theta')
-    plt.show()
     
     _x = length*np.sin(positions)
     _y = -length*np.cos(positions)
-    plotTrayectory(_x, _y, "Trayectory of simple pendulum - Euler")
-
-    plotEnergy(t, mass, length, gravity, positions, velocity, "energy in Euler")
+    
+    #plotTrayectory(_x, _y, "Trayectory of simple pendulum - Semi-implicit Euler method")
+    #plotAngles(t, positions, 'Pendulum motion - Semi-implicit Euler method')
+    #plotEnergy(t, mass, length, gravity, positions, velocity, "Energy - Semi-implicit Euler method")
     
 
     #show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
-    return positions
+    return t, positions, _x, _y, velocity
 
 def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
     y0 = np.array([theta0, omega0])
@@ -114,9 +110,11 @@ def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
     for i in range(len(t)):
         omega[i] = y[i,1]
     
-    plotTrayectory(_x, _y, 'Trayectory of pendulum - Explicit Euler method')
-    plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
-    plotAngles(t, theta, 'Pendulum motion - Explicit Euler method')
+    #plotTrayectory(_x, _y, 'Trayectory of pendulum - Explicit Euler method')
+    #plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
+    #plotAngles(t, theta, 'Pendulum motion - Explicit Euler method')
+    
+    return t, theta, _x, _y, omega
     
     
 '''
@@ -143,7 +141,7 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
     y0 = np.array([theta0, omega0])
     
     t = np.arange(t0, tn+h, h)
-    y = np.zeros((len(t), 2)) # vamos a tener un arreglo de len(t) arreglos de dos elementos
+    y = np.zeros((len(t), 2)) 
     y[0] = y0
     
     for i in range(len(t)-1):
@@ -154,45 +152,21 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
         
         y[i+1] = y[i] + (1/6)*(k1 + 2*k2 + 2*k3 + k4)
     
-    #plot solution
     theta = y[:,0] 
     _x = length*np.sin(theta)
     _y = -length*np.cos(theta)
-
-    #plotTrayectory(_x, _y, "Trayectory of simple pendulum - Runge Kutta 4")
-    
-    """
-    plt.plot(t, theta, 'b')
-    plt.xlabel('Time (s)')
-    plt.ylabel('Angle (radians)')
-    plt.title('Pendulum motion using Runge Kutta 4 method')
-    plt.show()
-    """
     
     omega = np.zeros(len(t))
     for i in range(len(t)):
         omega[i] = y[i,1]
     
-    plotEnergy(t, mass, length, gravity, theta, omega, "energy in RK4")
+    #plotTrayectory(_x, _y, 'Trayectory of pendulum - RK4 method')
+    #plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - RK4 method')
+    #plotAngles(t, theta, 'Pendulum motion - RK4 method')
     
-    #kinetic_energy = 0.5*m*(L*L)*(omega*omega)
-    #potential_energy = -m*g*L*np.cos(theta) + m*g*L
-    #total_energy = kinetic_energy + potential_energy
-    """
-    print("Total energy:\n")
-    print(total_energy)
+    #show_animation(length, t, _x, _y, "Motion of simple pendulum - RK4")
     
-    print("Kinetic energy:\n")
-    print(kinetic_energy)
-    
-    print("Potential energy:\n")
-    print(potential_energy)
-    """
-    #return t, theta, _x, _y
-    
-    show_animation(length, t, _x, _y, "Motion of simple pendulum - RK4")
-    
-    return theta
+    return t, theta, _x, _y, omega
 
 def jacobiana (theta, omega, gravity, length):
 
@@ -248,12 +222,43 @@ def estabilidad (J, theta, omega):
         print('El punto de equilibrio es inestable.')
     else:
         print('Se necesitan técnicas adicionales para determinar la estabilidad del punto de equilibrio.')
+        
+def plot_trayectories(x_ee, x_ei, x_rk, y_ee, y_ei, y_rk, title):
+    plt.plot(x_ee, y_ee, label = 'Explicit Euler method')
+    plt.plot(x_ei, y_ei, label = 'Semi-implicit Euler method')
+    plt.plot(x_rk, y_rk, label = 'RK4 method')
+    plt.title(title)
+    plt.xlabel("Horizontal position (m)")
+    plt.ylabel("Vertical position (m)")
+    plt.legend()
+    plt.show()
 
-if __name__ == '__main__':
-    #euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
-    #rungeKutta4_method(9.81, 9.8, math.pi/6, 0, 10, 0, 100, 0.01)
-    euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
+def plotAllAngles(t, theta_ee, label1, theta_ei, label2, theta_rk, label3, title):
+    plt.plot(t, theta_ee, label = label1)
+    plt.plot(t, theta_ei, label = label2)
+    plt.plot(t, theta_rk, label = label3)
+    plt.title(title)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Angle (rad)")
+    plt.legend()
+    plt.show()
     
+def plotAllTotalEnergies (t, mass, length, gravity, theta1, omega1, label1, theta2, omega2, label2, theta3, omega3, label3,  title):
+    plt.plot(t, E(mass, length, gravity, theta1, omega1), label = label1)
+    plt.plot(t, E(mass, length, gravity, theta2, omega2), label = label2)
+    plt.plot(t, E(mass, length, gravity, theta3, omega3), label = label3)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Energy")
+    plt.title(title)
+    plt.legend()
+    plt.show()
+    
+    
+if __name__ == '__main__':
+    #t_ei, theta_ei, x_ei, y_ei = euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
+    #t_rk, theta_rk, x_rk, y_rk = rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01)
+    #t_ee, theta_ee1, x_ee1, y_ee1, omega_ee1 = euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
+
     """
     print("PRIMER PUNTO")
     j1 = jacobiana(0, (3/2)*math.pi, 9.81, 9.8) # punto de equilibrio (0,0)
