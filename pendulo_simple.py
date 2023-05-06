@@ -66,15 +66,15 @@ def plotAngles(t, theta, title):
     plt.ylabel("Angle (rad)")
     plt.show()
 
-def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' = theta''
+def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): 
     w0 = math.sqrt(gravity/length)
     t_start = t0
     t_end = tn
     t = np.arange(t_start, t_end+step, step)
-    positions = np.zeros(len(t)) #z'
-    velocity = np.zeros(len(t)) #z
+    positions = np.zeros(len(t)) 
+    velocity = np.zeros(len(t)) 
     positions[0] = y0 
-    velocity[0] = x0 #velocidad
+    velocity[0] = x0 
 
     for i in range(1, len(t)):
         velocity[i] = velocity[i-1] + step*z_prime(positions[i-1], w0)
@@ -86,21 +86,18 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): #f = z' 
     #plotTrayectory(_x, _y, "Trayectory of simple pendulum - Semi-implicit Euler method")
     #plotAngles(t, positions, 'Pendulum motion - Semi-implicit Euler method')
     #plotEnergy(t, mass, length, gravity, positions, velocity, "Energy - Semi-implicit Euler method")
-    
 
-    #show_animation(length, t, _x, _y, "Motion of simple pendulum - Euler")
+    #show_animation(length, t, _x, _y, "Motion of simple pendulum - Semi-implicit Euler method")
     return t, positions, _x, _y, velocity
 
 def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
     y0 = np.array([theta0, omega0])
     t = np.arange(t0, tn+h, h)
-    y = np.zeros((len(t), 2)) # vamos a tener un arreglo de len(t) arreglos de dos elementos
+    y = np.zeros((len(t), 2)) 
     y[0] = y0
 
     for i in range(len(t)-1):  
         y[i+1] = y[i] + h*f(t[i], y[i], gravity, length)
-
-    #plot solution
 
     theta = y[:,0] 
     _x = length*np.sin(theta)
@@ -114,26 +111,14 @@ def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
     #plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
     #plotAngles(t, theta, 'Pendulum motion - Explicit Euler method')
     
+    show_animation(length, t, _x, _y, "Motion of simple pendulum - Explicit Euler method")
     return t, theta, _x, _y, omega
     
-    
-'''
-# RUNGE KUTTA 4
-g = 9.81 #gravitational acceleration (m/s^2)
-L = 9.8 #length of the pendulum (m)
-theta0 = math.pi/3  #initial angle (radians)
-omega0 = 0.0  #initial angular velocity (radians)
-m = 1.0 #mass of the pendulum
-t0, tn = 0.0, 40.0
-h = 0.1
-'''
 
 
 def f(ti, yi, gravity, length):
     theta, omega = yi
     theta_dt = omega
-    #omega_dt = -(g/L)*np.sin(theta)
-    #omega_dt = z_prime(theta, math.sqrt(g/L))
     omega_dt = -(gravity/length)*np.sin(theta) 
     return np.array([theta_dt, omega_dt])
 
