@@ -90,7 +90,7 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass):
     #show_animation(length, t, _x, _y, "Motion of simple pendulum - Semi-implicit Euler method")
     return t, positions, _x, _y, velocity
 
-def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass):
+def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, f):
     y0 = np.array([theta0, omega0])
     t = np.arange(t0, tn+h, h)
     y = np.zeros((len(t), 2)) 
@@ -123,7 +123,7 @@ def f(ti, yi, gravity, length):
     omega_dt = -(gravity/length)*np.sin(theta) 
     return np.array([theta_dt, omega_dt])
 
-def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h):
+def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, f):
     y0 = np.array([theta0, omega0])
     
     t = np.arange(t0, tn+h, h)
@@ -209,42 +209,48 @@ def estabilidad (J, theta, omega):
     else:
         print('Se necesitan técnicas adicionales para determinar la estabilidad del punto de equilibrio.')
         
-def plot_trayectories(x_ee, x_ei, x_rk, y_ee, y_ei, y_rk, title):
-    plt.plot(x_ee, y_ee, label = 'Explicit Euler method')
-    plt.plot(x_ei, y_ei, label = 'Semi-implicit Euler method')
-    plt.plot(x_rk, y_rk, label = 'RK4 method')
+def plot_trayectories(x_ee, x_ee_l, y_ee, y_ee_l, title):
+    plt.plot(x_ee, y_ee, label = 'Original ODE')
+    plt.plot(x_ee_l, y_ee_l, label = 'Linearized ODE')
     plt.title(title)
     plt.xlabel("Horizontal position (m)")
     plt.ylabel("Vertical position (m)")
     plt.legend()
     plt.show()
 
-def plotAllAngles(t, theta_ee, label1, theta_ei, label2, theta_rk, label3, title):
+def plotAllAngles(t, theta_ee, label1, theta_ee_l, label2, title):
     plt.plot(t, theta_ee, label = label1)
-    plt.plot(t, theta_ei, label = label2)
-    plt.plot(t, theta_rk, label = label3)
+    plt.plot(t, theta_ee_l, label = label2)
     plt.title(title)
     plt.xlabel("Time (s)")
     plt.ylabel("Angle (rad)")
     plt.legend()
     plt.show()
     
-def plotAllTotalEnergies (t, mass, length, gravity, theta1, omega1, label1, theta2, omega2, label2, theta3, omega3, label3,  title):
+def plotAllTotalEnergies (t, mass, length, gravity, theta1, omega1, label1, theta2, omega2, label2, title):
     plt.plot(t, E(mass, length, gravity, theta1, omega1), label = label1)
     plt.plot(t, E(mass, length, gravity, theta2, omega2), label = label2)
-    plt.plot(t, E(mass, length, gravity, theta3, omega3), label = label3)
     plt.xlabel("Time (s)")
     plt.ylabel("Energy")
     plt.title(title)
     plt.legend()
     plt.show()
+
+def linearized_f(ti, yi, gravity, length):
+    theta, omega = yi
+    theta_dt = omega
+    omega_dt = -(gravity/length)*theta 
+    return np.array([theta_dt, omega_dt])
+
     
     
 if __name__ == '__main__':
-    #t_ei, theta_ei, x_ei, y_ei = euler_semi_implicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
-    #t_rk, theta_rk, x_rk, y_rk = rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01)
-    #t_ee, theta_ee1, x_ee1, y_ee1, omega_ee1 = euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10)
-
+    #t_ei, theta_ei, x_ei, y_ei, omega_ei = euler_semi_implicito(math.pi/3, 0, 0, 50, 0.01, 9.81, 1, 10)
+    #t_rk, theta_rk, x_rk, y_rk, omega_rk = rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01, f)
+    #t_rk_l, theta_rk_l, x_rk_l, y_rk_l, omega_rk_l = rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01, linearized_f)
+    #t_ee, theta_ee, x_ee, y_ee, omega_ee = euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10, f)
+    #t_ee_l, theta_ee_l, x_ee_l, y_ee_l, omega_ee_l = euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10, linearized_f)
+    
     """
     print("PRIMER PUNTO")
     j1 = jacobiana(0, (3/2)*math.pi, 9.81, 9.8) # punto de equilibrio (0,0)
