@@ -227,9 +227,10 @@ def plotAllAngles(t, theta_ee, label1, theta_ee_l, label2, title):
     plt.legend()
     plt.show()
     
-def plotAllTotalEnergies (t, mass, length, gravity, theta1, omega1, label1, theta2, omega2, label2, title):
-    plt.plot(t, E(mass, length, gravity, theta1, omega1), label = label1)
-    plt.plot(t, E(mass, length, gravity, theta2, omega2), label = label2)
+def plotAllTotalEnergies (t1, t2, t3, mass, length, gravity, theta1, omega1, label1, theta2, omega2, label2, theta3, omega3, label3, title):
+    plt.plot(t1, E(mass, length, gravity, theta1, omega1), label = label1)
+    plt.plot(t2, E(mass, length, gravity, theta2, omega2), label = label2)
+    plt.plot(t3, E(mass, length, gravity, theta3, omega3), label = label3)
     plt.xlabel("Time (s)")
     plt.ylabel("Energy")
     plt.title(title)
@@ -242,6 +243,37 @@ def linearized_f(ti, yi, gravity, length):
     omega_dt = -(gravity/length)*theta 
     return np.array([theta_dt, omega_dt])
 
+def relativeError_totalEnergy(mass, length, gravity, theta1, omega1, label1, theta2, omega2, label2, theta3, omega3, label3, title):
+    
+    energy1 = E(mass, length, gravity, theta1, omega1)
+    energy2 = E(mass, length, gravity, theta2, omega2)
+    energy3 = E(mass, length, gravity, theta3, omega3)
+    
+    ground_truth1 = energy1[0]
+    ground_truth2 = energy2[0]
+    ground_truth3 = energy3[0]
+    
+    error1 = np.zeros(len(energy1))
+    for i in range(len(energy1)):
+        error1[i] = abs(energy1[i]-ground_truth1)/ground_truth1 
+    
+    error2 = np.zeros(len(energy2))
+    for i in range(len(energy2)):
+        error2[i] = abs(energy2[i]-ground_truth2)/ground_truth2
+    
+    error3 = np.zeros(len(energy3))
+    for i in range(len(energy3)):
+        error3[i] = abs(energy3[i]-ground_truth3)/ground_truth3 
+    
+    
+    plt.plot(t1, error1, label = label1)
+    plt.plot(t2, error2, label = label2)
+    plt.plot(t3, error3, label = label3)
+    plt.xlabel("Time (s)")
+    plt.ylabel("Error")
+    plt.title(title)
+    plt.legend()
+    plt.show()
     
     
 if __name__ == '__main__':
