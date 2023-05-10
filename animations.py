@@ -1,6 +1,5 @@
 import pendulo_doble as pd
-
-#PENDULO DOBLE
+import pendulo_simple as ps 
 
 def animations_pd1 (t):
     # Definir las condiciones iniciales
@@ -54,8 +53,21 @@ def animations_pd1 (t):
     pd.anim(t, theta1, theta2, length, length, 'Péndulo doble theta1 = pi/30, theta2 = pi/30')
 
 
-
+def animations_ps():
+    mass = 10
+    length = 1
+    gravity = 9.81
+    t0, tn = 0, 10
+    h = 0.01
+    theta0, omega0 = 0, ps.math.pi/3
+    
+    #Figura 2
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 2")
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 5")
+    
+    
 
 if __name__ == "__main__":
-    t = pd.np.linspace(0, 20, 2000)
-    animations_pd1(t)
+    #t = pd.np.linspace(0, 20, 2000)
+    #animations_pd1(t)
+    animations_ps()

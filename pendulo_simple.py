@@ -2,7 +2,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-import sympy as sp
+#import sympy as sp
 
 def update(num, x, y, line):
     line.set_data([0, x[num]], [0, y[num]])
@@ -66,7 +66,7 @@ def plotAngles(t, theta, title):
     plt.ylabel("Angle (rad)")
     plt.show()
 
-def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass): 
+def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass,ani_title): 
     w0 = math.sqrt(gravity/length)
     t_start = t0
     t_end = tn
@@ -87,10 +87,10 @@ def euler_semi_implicito (y0, x0, t0, tn, step, gravity, length, mass):
     #plotAngles(t, positions, 'Pendulum motion - Semi-implicit Euler method')
     #plotEnergy(t, mass, length, gravity, positions, velocity, "Energy - Semi-implicit Euler method")
 
-    #show_animation(length, t, _x, _y, "Motion of simple pendulum - Semi-implicit Euler method")
+    show_animation(length, t, _x, _y, ani_title)
     return t, positions, _x, _y, velocity
 
-def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, f):
+def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, f, ani_title):
     y0 = np.array([theta0, omega0])
     t = np.arange(t0, tn+h, h)
     y = np.zeros((len(t), 2)) 
@@ -111,7 +111,7 @@ def euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, f):
     #plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - Explicit Euler method')
     #plotAngles(t, theta, 'Pendulum motion - Explicit Euler method')
     
-    #show_animation(length, t, _x, _y, "Motion of simple pendulum - Explicit Euler method")
+    show_animation(length, t, _x, _y, ani_title)
     
     return t, theta, _x, _y, omega
     
