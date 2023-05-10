@@ -22,7 +22,8 @@ def show_animation(L, t, x, y, title):
     plt.xlabel("Horizontal position (m)")
     plt.ylabel("Vertical position (m)")
     plt.show()
-
+    
+    
 def E (mass, length, gravity, theta, omega):
     return T(mass, length, omega) + V(mass, gravity, length, theta)
 
@@ -123,7 +124,7 @@ def f(ti, yi, gravity, length):
     omega_dt = -(gravity/length)*np.sin(theta) 
     return np.array([theta_dt, omega_dt])
 
-def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, f):
+def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, f, ani_title):
     y0 = np.array([theta0, omega0])
     
     t = np.arange(t0, tn+h, h)
@@ -150,7 +151,7 @@ def rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, f):
     #plotEnergy(t, mass, length, gravity, theta, omega, 'Energy - RK4 method')
     #plotAngles(t, theta, 'Pendulum motion - RK4 method')
     
-    #show_animation(length, t, _x, _y, "Motion of simple pendulum - RK4")
+    show_animation(length, t, _x, _y, ani_title)
     
     return t, theta, _x, _y, omega
 
