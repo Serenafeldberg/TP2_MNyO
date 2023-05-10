@@ -276,33 +276,5 @@ def relativeError_totalEnergy(mass, length, gravity, theta1, omega1, label1, the
     plt.legend()
     plt.show()
     
-    
-if __name__ == '__main__':
-    #t_ei, theta_ei, x_ei, y_ei, omega_ei = euler_semi_implicito(math.pi/3, 0, 0, 50, 0.01, 9.81, 1, 10)
-    t_rk, theta_rk, x_rk, y_rk, omega_rk = rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01, f)
-    t_rk_l, theta_rk_l, x_rk_l, y_rk_l, omega_rk_l = rungeKutta4_method(9.81, 1, math.pi/3, 0, 10, 0, 10, 0.01, linearized_f)
-    #t_ee, theta_ee, x_ee, y_ee, omega_ee = euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10, f)
-    #t_ee_l, theta_ee_l, x_ee_l, y_ee_l, omega_ee_l = euler_explicito(math.pi/3, 0, 0, 10, 0.01, 9.81, 1, 10, linearized_f)
-    
-    energia_rk4 = E(1, 1, 9.81, theta_rk, omega_rk)
-    energia_rk4l = E(1, 1, 9.81, theta_rk_l, omega_rk_l)
-    
 
-    '''
-    print("Energia inicial: ", energia_rk4[0])
-    print("Energia final: ", energia_rk4[-1])
-    print("Energia media: ", np.mean(energia_rk4))
-    print("desviacion estandar: ", np.std(energia_rk4))
-
-    print("Energia inicial linealizada: ", energia_rk4l[0])
-    print("Energia final linealizada: ", energia_rk4l[-1])
-    print("Energia media linealizada: ", np.mean(energia_rk4l))
-    print("desviacion estandar linealizada: ", np.std(energia_rk4l))
-    '''
-
-    """
-    print("PRIMER PUNTO")
-    j1 = jacobiana(0, (3/2)*math.pi, 9.81, 9.8) # punto de equilibrio (0,0)
-    print("SEGUNDO PUNTO")
-    j2 = jacobiana(0, math.pi, 9.81, 9.8) # punto de equilibrio (0, pi)
-    """
+    

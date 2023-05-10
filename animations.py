@@ -1,14 +1,14 @@
 import pendulo_doble as pd
 import pendulo_simple as ps 
 
-def animations_pd1 (t):
-    # Definir las condiciones iniciales
+def animations_pd1 ():
     theta1_p0 = 0
     theta2_p0 = 0
     delta = 0
     t0 = 0
     tf = 20
     N = 2000
+    t = pd.np.linspace(t0, tf, N)
     length = 1
     gravity = 9.8
 
@@ -62,47 +62,71 @@ def animations_ps():
     theta0, omega0 = ps.math.pi/3, 0
     
     #Figura 2
-    #ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 2")
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 2")
     
     #Figura 5
-    #ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 5")
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 5")
     
     #Figura 8
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 8")
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 8")
     
     #Figura 11
-    #h = 0.5
-    #ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 11 (h=0.5)")
-    #h = 0.01
-    #ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 11 (h=0.01)")
-    #h = 0.001
-    #ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 11 (h=0.001)")
+    h = 0.5
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 11 (h=0.5)")
+    h = 0.01
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 11 (h=0.01)")
+    h = 0.001
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 11 (h=0.001)")
     
     #Figura 12
-    #h = 0.5
-    #ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 12 (h=0.5)")
-    #h = 0.01
-    #ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 12 (h=0.01)")
-    #h = 0.001
-    #ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 12 (h=0.001)")
+    h = 0.5
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 12 (h=0.5)")
+    h = 0.01
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 12 (h=0.01)")
+    h = 0.001
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 12 (h=0.001)")
     
     #Figura 13 
-    #h = 0.5
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.5)")
-    #h = 0.01
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.01)")
-    #h = 0.001
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.001)")
+    h = 0.5
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.5)")
+    h = 0.01
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.01)")
+    h = 0.001
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.001)")
     
     #Figura 14
-    #h = 0.5
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.5)")
-    #h = 0.1
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.1)")
-    #h = 0.001
-    #ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.001)")
-
+    h = 0.5
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.5)")
+    h = 0.1
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.1)")
+    h = 0.001
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 13 (h=0.001)")
+    
+    #Figura 15 
+    theta0 = ps.math.pi/3
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 15 (initial angle=pi/3)")
+    theta0 = ps.math.pi/2
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 15 (initial angle=pi/2)")
+    theta0 = ps.math.pi/6
+    ps.euler_explicito(theta0, omega0, t0, tn, h, gravity, length, mass, ps.f, "Motion of simple pendulum - Figure 15 (initial angle=pi/6)")
+    
+    #Figura 16
+    theta0 = ps.math.pi/3
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 16 (initial angle=pi/3)")
+    theta0 = ps.math.pi/2
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 16 (initial angle=pi/2)")
+    theta0 = ps.math.pi/6
+    ps.euler_semi_implicito(theta0, omega0, t0, tn, h, gravity, length, mass, "Motion of simple pendulum - Figure 16 (initial angle=pi/6)")
+    
+    #Figura 17
+    theta0 = ps.math.pi/3
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 17 (initial angle=pi/3)")
+    theta0 = ps.math.pi/2
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 17 (initial angle=pi/2)")
+    theta0 = ps.math.pi/6
+    ps.rungeKutta4_method(gravity, length, theta0, omega0, mass, t0, tn, h, ps.f, "Motion of simple pendulum - Figure 17 (initial angle=pi/6)")
+    
+    
 if __name__ == "__main__":
-    #t = pd.np.linspace(0, 20, 2000)
-    #animations_pd1(t)
     animations_ps()
+    animations_pd1()

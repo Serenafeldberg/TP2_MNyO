@@ -119,44 +119,5 @@ def plot_energy (t, theta, theta_p, length, gravity, label1, label2, label3):
     plt.ylabel("Energy (J)")
     plt.legend()
     plt.show()
-    
-
-if __name__ == "__main__":
-    
-    # Parámetros
-    length = 1.0
-    theta1_0 = np.pi/6
-    theta2_0 = np.pi/4
-    theta1_p0 = 0.0
-    theta2_p0 = 0.0
-    delta = theta1_0 - theta2_0
-    t0 = 0.0
-    tf = 20
-    N = 2000
-    t = np.arange(t0, tf, (tf-t0)/N)
-
-    # Resolver las ecuaciones diferenciales
-    theta1, theta2, theta1_p, theta2_p = solve_pendulum(theta1_0, theta2_0, theta1_p0, theta2_p0, delta, t0, tf, N, length, 9.81)
-
-    anim(t, theta1, theta2, length, length, "Double Pendulum animation")
-    #animate_pendulum(np.linspace(t0, tf, N+1), theta1, theta2, length, length)
-
-    x1_ = length*np.sin(theta1)
-    y1_ = -length*np.cos(theta1)
-
-    x2_ =  x1_ + length*np.sin(theta2)
-    y2_ = y1_ - length*np.cos(theta2)
-
-    pendulum_trayectory(t, theta1, "First Pendulum trayectory")
-
-    pendulum_position(x1_, y1_, "First Pendulum Position")
-
-    plot_energy(t, theta1, theta1_p, length, 9.81, "First Pendulum Total Energy", "First Pendulum Cinetic Energy", "First Pendulum Potential Energy")
-
-    pendulum_trayectory(t, theta2, "Second Pendulum trayectory")
-
-    pendulum_position(x2_, y2_, "Second Pendulum Position")
-
-    plot_energy(t, theta2, theta2_p, length, 9.81, "Second Pendulum Total Energy", "Second Pendulum Cinetic Energy", "Second Pendulum Potential Energy")
-    
+  
 
